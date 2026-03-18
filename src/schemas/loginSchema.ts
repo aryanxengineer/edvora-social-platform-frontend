@@ -1,16 +1,32 @@
+import { passwordSchema } from "./registerSchema";
 import * as z from "zod";
 
-const loginSchema = z.object({
-  username: z
-    .string()
-    .toLowerCase()
-    .min(10, "Username must be at least 10 characters.")
-    .max(32, "Username must be at most 32 characters."),
+const emailSchema = z.string().email();
 
-  password: z
+const phoneSchema = z
+  .string()
+  .regex(/^[6-9]\d{9}$/, "Invalid phone number"); // Indian format
+
+const usernameSchema = z
+  .string()
+  .min(3)
+  .max(20)
+  .regex(/^[a-zA-Z0-9_]+$/, "Invalid username");
+
+const loginSchema = z.object({
+  identifier: z
     .string()
-    .min(10, "Password must be at least 10 characters.")
-    .max(20, "Password must be at most 32 characters."),
+    .trim()
+    .toLowerCase()
+    .refine((value) => {
+      return (
+        emailSchema.safeParse(value).success ||
+        phoneSchema.safeParse(value).success ||
+        usernameSchema.safeParse(value).success
+      );
+    }, "Enter valid email, phone number, or username"),
+
+  password: passwordSchema,
 });
 
 export default loginSchema;
