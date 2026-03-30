@@ -6,7 +6,7 @@ import { ThemeProvider } from "./contexts/ThemeProvider.tsx";
 import { BrowserRouter } from "react-router-dom";
 import { Toaster } from "sonner";
 
-export let isAuthenticated = false;
+export let isAuthenticated = true;
 
 
 createRoot(document.getElementById("root")!).render(
