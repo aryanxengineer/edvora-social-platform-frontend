@@ -2,7 +2,7 @@ import Login from "@/app/auth/login/page";
 import Register from "@/app/auth/register/page";
 import Home from "@/app/home/page";
 
-export const publicPaths = [
+export const publicRoutes = [
   {
     title: "Login",
     path: "/login",
@@ -15,7 +15,7 @@ export const publicPaths = [
   },
 ];
 
-export const protectedPaths = [
+export const protectedRoutes = [
   {
     title: "Home",
     path: "/",

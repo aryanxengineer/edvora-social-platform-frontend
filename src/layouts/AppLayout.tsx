@@ -1,19 +1,21 @@
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Outlet } from "react-router-dom";
+import { AppSidebar } from "@/components/Sidebar";
 
 const AppLayout = () => {
   return (
-    <div className="flex h-screen">
-      
-      {/* Sidebar */}
-      <aside className="w-64 bg-black text-white p-4">
-        Sidebar
-      </aside>
-
-      {/* Main Content */}
-      <main className="flex-1 p-6 bg-gray-50 overflow-auto">
-        <Outlet />
-      </main>
-
+    <div className="w-screen h-screen">
+      <div className="max-w-screen-2xl h-full mx-auto">
+        <div className="w-3/4 mx-auto h-full bg-green-500">
+          <SidebarProvider>
+            <AppSidebar />
+            <SidebarTrigger />
+            <main>
+              <Outlet />
+            </main>
+          </SidebarProvider>
+        </div>
+      </div>
     </div>
   );
 };

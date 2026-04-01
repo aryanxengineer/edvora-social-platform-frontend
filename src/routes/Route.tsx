@@ -1,27 +1,27 @@
-import ProtectedRoute from "@/components/ProtectedRoutes";
-import PublicRoute from "@/components/PublicRoutes";
+import ProtectedPath from "@/components/ProtectedPath";
+import PublicPath from "@/components/PublicPath";
 import AppLayout from "@/layouts/AppLayout";
 import BaseLayout from "@/layouts/BaseLayout";
 import { Route, Routes } from "react-router-dom";
 
-import { protectedPaths, publicPaths } from "./index";
+import { protectedRoutes, publicRoutes } from "./index";
 
 const AppRouter = () => {
   return (
     <Routes>
       {/* PUBLIC FLOW */}
-      <Route element={<PublicRoute />}>
+      <Route element={<PublicPath />}>
         <Route element={<BaseLayout />}>
-          {publicPaths.map(({ title, path, element }, index) => (
+          {publicRoutes.map(({ title, path, element }, index) => (
             <Route key={title + index} path={path} element={element} />
           ))}
         </Route>
       </Route>
 
       {/* PROTECTED FLOW */}
-      <Route element={<ProtectedRoute />}>
+      <Route element={<ProtectedPath />}>
         <Route element={<AppLayout />}>
-          {protectedPaths.map(({ title, path, element }, index) => (
+          {protectedRoutes.map(({ title, path, element }, index) => (
             <Route key={title + index} path={path} element={element} />
           ))}
         </Route>

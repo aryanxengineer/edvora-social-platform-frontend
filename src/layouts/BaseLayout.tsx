@@ -2,10 +2,13 @@ import { Outlet } from "react-router-dom";
 
 const BaseLayout = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      {/* centered auth card */}
-      <div className="w-full max-w-md bg-white p-6 rounded-xl shadow">
-        <Outlet />
+    <div className="w-screen h-screen scroll-none">
+      <div className="max-w-screen-2xl h-full mx-auto">
+        <div className="w-3/4 mx-auto">
+          <div className="w-full h-full ">
+            <Outlet />
+          </div>
+        </div>
       </div>
     </div>
   );
