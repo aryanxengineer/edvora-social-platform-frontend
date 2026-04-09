@@ -1,6 +1,7 @@
 import Login from "@/app/auth/login/page";
 import Register from "@/app/auth/register/page";
 import Home from "@/app/home/page";
+import Create from "@/app/create/page";
 
 export const publicRoutes = [
   {
@@ -21,5 +22,9 @@ export const protectedRoutes = [
     path: "/",
     element: <Home />,
   },
+  {
+    title: "Create",
+    path: "/create",
+    element: <Create />,
+  },
 ];
-

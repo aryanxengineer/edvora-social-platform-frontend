@@ -13,7 +13,7 @@ export const signupUser = createAsyncThunk<UserResponseType, SignupInputType>(
       const { data } = await axiosInstance.post("/auth/signup", signupInput, {
         withCredentials: true,
       });
-
+      console.log(data);
       return data;
     } catch (error: any) {
       return rejectWithValue(
@@ -35,6 +35,7 @@ export const signinUser = createAsyncThunk<UserResponseType, SigninInputType>(
         withCredentials: true,
       });
 
+      console.log(data);
       return data;
     } catch (error: any) {
       return rejectWithValue(
@@ -47,59 +48,37 @@ export const signinUser = createAsyncThunk<UserResponseType, SigninInputType>(
 /*===================
     signin Action
 ===================*/
-export const authenticUser = createAsyncThunk<UserResponseType, SignupInputType>(
-  "auth/authenticUser",
-  async (_, { rejectWithValue }) => {
-    try {
-      const { data } = await axiosInstance.get("/auth/", {
-        withCredentials: true,
-      });
-
-      return data;
-    } catch (error: any) {
-      return rejectWithValue(
-        error.response?.data?.message || "User fetching failed - Login again",
-      );
-    }
-  },
-);
+export const authenticUser = createAsyncThunk<
+  UserResponseType
+>("auth/authenticUser", async (_, { rejectWithValue }) => {
+  try {
+    const { data } = await axiosInstance.get("/auth/", {
+      withCredentials: true,
+    });
+    console.log(data);
+    return data;
+  } catch (error: any) {
+    return rejectWithValue(
+      error.response?.data?.message || "User fetching failed - Login again",
+    );
+  }
+});
 
 /*===================
     signin Action
 ===================*/
-export const signoutSingleDevice = createAsyncThunk(
-  "auth/signoutSingleDevice",
+export const signout = createAsyncThunk(
+  "auth/signout",
   async (_, { rejectWithValue }) => {
     try {
-      const { data } = await axiosInstance.post("/auth/signout-single-device", {
+      const { data } = await axiosInstance.post("/auth/signout", {
         withCredentials: true,
       });
-
+      console.log(data);
       return data;
     } catch (error: any) {
       return rejectWithValue(
         error.response?.data?.message || "Sign out failed - Try again later",
-      );
-    }
-  },
-);
-
-/*===================
-    signin Action
-===================*/
-export const signoutAllDevices = createAsyncThunk(
-  "auth/signoutAllDevice",
-  async (_, { rejectWithValue }) => {
-    try {
-      const { data } = await axiosInstance.post("/auth/signout-all-devices", {
-        withCredentials: true,
-      });
-
-      return data;
-    } catch (error: any) {
-      return rejectWithValue(
-        error.response?.data?.message ||
-          "Sign out from all devices failed - Try again later",
       );
     }
   },

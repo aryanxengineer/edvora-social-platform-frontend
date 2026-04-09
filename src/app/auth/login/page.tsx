@@ -14,7 +14,7 @@ import { Field, FieldError, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Link, useNavigate } from "react-router-dom";
 import { signinUser } from "@/features/auth/authActions";
-import { useAppDispatch } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { toast } from "sonner";
 
 // ----------------------
@@ -36,13 +36,14 @@ const identifierSchema = z
 
 const formSchema = z.object({
   identifier: identifierSchema,
-  password: z.string().min(6, "Password must be at least 6 characters"),
+  password: z.string().min(6, "Password must be at least 8 characters"),
 });
 
 const Login = () => {
   const dispatch = useAppDispatch();
-
   const navigate = useNavigate();
+
+  const { isLoading, message } = useAppSelector((state) => state.auth);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -54,10 +55,9 @@ const Login = () => {
 
   async function onSubmit(data: z.infer<typeof formSchema>) {
     try {
-      console.log(data);
       await dispatch(signinUser(data)).unwrap();
-      toast.success("User signup successfully");
-      navigate('/chat');
+      toast.success(message);
+      navigate("/");
     } catch (err: any) {
       toast.error(err || "Signup failed");
     }

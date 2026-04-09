@@ -1,5 +1,20 @@
 import axiosInstance from "@/helpers/axiosInstance";
+import type { NewPostDataType } from "@/schemas/post";
 import { createAsyncThunk } from "@reduxjs/toolkit";
+
+export const createPost = createAsyncThunk(
+  "posts/create",
+  async (postData: NewPostDataType, { rejectWithValue }) => {
+    try {
+      const { data } = await axiosInstance.post("/posts/", postData);
+      return data;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to create post",
+      );
+    }
+  },
+);
 
 export const getSinglePost = createAsyncThunk(
   "posts/single",

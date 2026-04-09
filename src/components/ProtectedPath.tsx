@@ -1,10 +1,11 @@
+import { useAppSelector } from "@/store/hooks";
 import { Navigate, Outlet } from "react-router-dom";
 
 const ProtectedPath = () => {
 
-  const user = localStorage.getItem("id");
+  const { isAuthenticated } = useAppSelector(state => state.auth);
 
-  if (!user) {
+  if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
 

@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/card";
 import { Field, FieldError, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { signupInputSchema } from "@/schemas/auth";
 import { signupUser } from "@/features/auth/authActions";
@@ -21,8 +21,9 @@ import { toast } from "sonner";
 import { Spinner } from "@/components/ui/spinner";
 
 const Register = () => {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { signupLoading } = useAppSelector((state) => state.auth);
+  const { isLoading } = useAppSelector((state) => state.auth);
 
   const form = useForm<
     z.input<typeof signupInputSchema>,
@@ -37,7 +38,7 @@ const Register = () => {
       phoneNumber: "",
       password: "",
       dateOfBirth: "",
-      gender: "2",
+      gender: 2,
     },
   });
 
@@ -46,6 +47,7 @@ const Register = () => {
       await dispatch(signupUser(data)).unwrap();
       toast.success("User registered successfully");
       form.reset();
+      navigate("/");
     } catch (err: any) {
       toast.error(err || "Registration failed");
     }
@@ -159,11 +161,10 @@ const Register = () => {
                 render={({ field }) => (
                   <select
                     {...field}
-                    onChange={(e) => field.onChange(Number(e.target.value))} // 🔥 convert to number
+                    onChange={(e) => field.onChange(Number(e.target.value))}
                     value={field.value ?? ""}
                     className="h-11 rounded-lg border px-2"
                   >
-                    <option value="">Select Gender</option>
                     <option value={0}>Male</option>
                     <option value={1}>Female</option>
                     <option value={2}>Other</option>
@@ -176,9 +177,9 @@ const Register = () => {
             <Button
               type="submit"
               className="w-full h-11 rounded-lg text-base"
-              disabled={signupLoading}
+              disabled={isLoading}
             >
-              {signupLoading ? (
+              {isLoading ? (
                 <div className="flex items-center justify-center gap-2">
                   <Spinner />
                   <span>Registering...</span>

@@ -44,7 +44,7 @@ export const signupInputSchema = z
       .transform((val) => new Date(val)),
 
     gender: z
-      .string()
+      .number()
       .transform((val) => Number(val))
       .refine((val) => [0, 1, 2].includes(val), {
         message: "Invalid gender",

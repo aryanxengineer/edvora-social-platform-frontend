@@ -7,13 +7,13 @@ const AppLayout = () => {
     <div className="w-screen h-screen">
       <div className="max-w-screen-2xl h-full mx-auto">
         <div className="w-3/4 mx-auto h-full">
-          <SidebarProvider>
+          <SidebarProvider >
             <AppSidebar />
-            <main className="w-full h-screen grid grid-cols-[65%_35%]">
+            <main className="w-full h-screen lg:grid lg:grid-cols-[65%_35%]">
               <section className="h-screen w-full border-r">
                 <Outlet />
               </section>
-              <section className="w-full h-screen">
+              <section className="w-full h-screen border-r lg:block hidden">
                 <div className="h-full p-2 grid grid-rows-[40%_60%]">
                   <div>Activity</div>
                   <div>Footer</div>

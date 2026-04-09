@@ -1,20 +1,20 @@
 export type UserDataType = {
   id: string;
-  name: string;
   email: string;
 };
 
 export type UserResponseType = {
-  data: UserDataType
+  success: boolean;
+  data: UserDataType;
+  message: string;
 };
 
 export interface AuthState {
   user: UserDataType | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  error: string | null;
-  loginLoading: boolean;
-  signupLoading: boolean;
+  message: string;
+  success: boolean;
 }
 
 export type SignupInputType = {
@@ -27,8 +27,7 @@ export type SignupInputType = {
   gender: number;
 };
 
-
 export type SigninInputType = {
   identifier: string;
   password: string;
-}
+};
