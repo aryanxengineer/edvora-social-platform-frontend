@@ -13,8 +13,8 @@ const App = () => {
   }, []);
 
   return isLoading ? (
-    <div className="h-screen w-screen flex justify-center items-center">
-      <Spinner fontSize={30} />
+    <div className="w-full h-screen flex justify-center items-center">
+      <Spinner />
     </div>
   ) : (
     <AppRouter />

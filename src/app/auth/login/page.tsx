@@ -16,6 +16,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { signinUser } from "@/features/auth/authActions";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { toast } from "sonner";
+import { Spinner } from "@/components/ui/spinner";
 
 // ----------------------
 // Validation Schema
@@ -136,8 +137,16 @@ const Login = () => {
             type="submit"
             form="login-form"
             className="w-full h-11 rounded-lg text-base"
+            disabled={isLoading}
           >
-            Login
+            {isLoading ? (
+              <span>
+                <Spinner />
+                {"Loggining in..."}
+              </span>
+            ) : (
+              <span>Login</span>
+            )}
           </Button>
           <p className="text-sm text-muted-foreground">
             If you don't have an account?{" "}

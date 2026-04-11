@@ -52,7 +52,7 @@ export const authenticUser = createAsyncThunk<
   UserResponseType
 >("auth/authenticUser", async (_, { rejectWithValue }) => {
   try {
-    const { data } = await axiosInstance.get("/auth/", {
+    const { data } = await axiosInstance.get("/auth/me", {
       withCredentials: true,
     });
     console.log(data);

@@ -10,15 +10,7 @@ const AppLayout = () => {
           <SidebarProvider >
             <AppSidebar />
             <main className="w-full h-screen lg:grid lg:grid-cols-[65%_35%]">
-              <section className="h-screen w-full border-r">
-                <Outlet />
-              </section>
-              <section className="w-full h-screen border-r lg:block hidden">
-                <div className="h-full p-2 grid grid-rows-[40%_60%]">
-                  <div>Activity</div>
-                  <div>Footer</div>
-                </div>
-              </section>
+              <Outlet />
             </main>
           </SidebarProvider>
         </div>

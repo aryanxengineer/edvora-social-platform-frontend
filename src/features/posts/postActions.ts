@@ -1,10 +1,9 @@
 import axiosInstance from "@/helpers/axiosInstance";
-import type { NewPostDataType } from "@/schemas/post";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 export const createPost = createAsyncThunk(
   "posts/create",
-  async (postData: NewPostDataType, { rejectWithValue }) => {
+  async (postData: any, { rejectWithValue }) => {
     try {
       const { data } = await axiosInstance.post("/posts/", postData);
       return data;
