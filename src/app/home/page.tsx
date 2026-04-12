@@ -1,8 +1,10 @@
+import Container from "@/components/Container";
+
 const Home = () => {
   return (
-    <div className="">
-     <h2>Posts</h2>
-    </div>
+    <Container>
+      <div>Home page</div>
+    </Container>
   );
 };
 

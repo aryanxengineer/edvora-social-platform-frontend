@@ -44,7 +44,7 @@ const Login = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const { isLoading, message } = useAppSelector((state) => state.auth);
+  const { isLoading } = useAppSelector((state) => state.auth);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -57,7 +57,7 @@ const Login = () => {
   async function onSubmit(data: z.infer<typeof formSchema>) {
     try {
       await dispatch(signinUser(data)).unwrap();
-      toast.success(message);
+      toast.success("Login successfull");
       navigate("/");
     } catch (err: any) {
       toast.error(err || "Signup failed");
@@ -65,7 +65,7 @@ const Login = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-gray-50 to-gray-200 p-4">
+    <div className="min-h-screen flex items-center justify-center p-4">
       <Card className="w-full max-w-md shadow-xl rounded-2xl border bg-white/80 backdrop-blur">
         <CardHeader className="space-y-1 text-center">
           <CardTitle className="text-2xl font-semibold tracking-tight">

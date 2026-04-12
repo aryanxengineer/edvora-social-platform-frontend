@@ -54,152 +54,175 @@ const Register = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-gray-50 to-gray-200 p-4">
-      <Card className="w-full max-w-md shadow-xl rounded-2xl border bg-white/80 backdrop-blur">
-        {/* Header */}
-        <CardHeader className="space-y-1 text-center">
-          <CardTitle className="text-2xl font-semibold tracking-tight">
-            Create Account
-          </CardTitle>
-          <p className="text-sm text-muted-foreground">
-            Join and start your journey
+    <div className="min-h-screen flex items-center justify-center p-3 sm:p-4 overflow-hidden">
+      <Card className="w-full h-full max-w-6xl grid grid-cols-1 md:grid-cols-2 shadow-xl sm:shadow-2xl rounded-2xl sm:rounded-3xl overflow-hidden border bg-white/80 backdrop-blur">
+        {/* LEFT SIDE (HIDDEN ON MOBILE) */}
+        <div className="hidden md:flex flex-col justify-center items-center bg-linear-to-br from-gray-900 to-gray-700 text-white p-10">
+          <h2 className="text-3xl font-semibold mb-4">Welcome</h2>
+          <p className="text-sm text-gray-300 text-center max-w-xs">
+            Create your account and start your journey with a modern experience.
           </p>
-        </CardHeader>
+        </div>
 
-        {/* Form */}
-        <CardContent>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-            <FieldGroup>
-              {/* Fullname */}
-              <Controller
-                name="fullname"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <Input {...field} placeholder="Full Name" />
-                    <FieldError errors={[fieldState.error]} />
-                  </Field>
-                )}
-              />
+        {/* RIGHT SIDE (FORM) */}
+        <div className="flex flex-col justify-center w-full h-full px-4 py-6 sm:px-6 md:px-8 md:py-8">
+          {/* Header */}
+          <CardHeader className="space-y-1 text-center md:text-left p-0 mb-4 sm:mb-6">
+            <CardTitle className="text-xl sm:text-2xl font-semibold tracking-tight">
+              Create Account
+            </CardTitle>
+            <p className="text-xs sm:text-sm text-muted-foreground">
+              Join and start your journey
+            </p>
+          </CardHeader>
 
-              {/* Username */}
-              <Controller
-                name="username"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <Input {...field} placeholder="Username" />
-                    <FieldError errors={[fieldState.error]} />
-                  </Field>
-                )}
-              />
-
-              {/* Email */}
-              <Controller
-                name="email"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <Input
-                      {...field}
-                      value={field.value || ""}
-                      placeholder="Email (optional)"
-                    />
-                    <FieldError errors={[fieldState.error]} />
-                  </Field>
-                )}
-              />
-
-              {/* Phone */}
-              <Controller
-                name="phoneNumber"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <Input
-                      {...field}
-                      value={field.value || ""}
-                      placeholder="Phone (optional)"
-                    />
-                    <FieldError errors={[fieldState.error]} />
-                  </Field>
-                )}
-              />
-
-              {/* Password */}
-              <Controller
-                name="password"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <Input {...field} type="password" placeholder="Password" />
-                    <FieldError errors={[fieldState.error]} />
-                  </Field>
-                )}
-              />
-
-              {/* DOB */}
-              <Controller
-                name="dateOfBirth"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <Input
-                      type="date"
-                      value={field.value || ""}
-                      onChange={field.onChange}
-                    />
-                    <FieldError errors={[fieldState.error]} />
-                  </Field>
-                )}
-              />
-
-              {/* Gender */}
-              <Controller
-                name="gender"
-                control={form.control}
-                render={({ field }) => (
-                  <select
-                    {...field}
-                    onChange={(e) => field.onChange(Number(e.target.value))}
-                    value={field.value ?? ""}
-                    className="h-11 rounded-lg border px-2"
-                  >
-                    <option value={0}>Male</option>
-                    <option value={1}>Female</option>
-                    <option value={2}>Other</option>
-                  </select>
-                )}
-              />
-            </FieldGroup>
-
-            {/* Submit Button */}
-            <Button
-              type="submit"
-              className="w-full h-11 rounded-lg text-base"
-              disabled={isLoading}
+          {/* Form */}
+          <CardContent className="p-0">
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="flex flex-col gap-3 sm:gap-4 md:grid md:grid-cols-2"
             >
-              {isLoading ? (
-                <div className="flex items-center justify-center gap-2">
-                  <Spinner />
-                  <span>Registering...</span>
-                </div>
-              ) : (
-                "Register"
-              )}
-            </Button>
-          </form>
-        </CardContent>
+              <FieldGroup className="contents">
+                {/* Fullname */}
+                <Controller
+                  name="fullname"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <Input {...field} placeholder="Full Name" />
+                      <FieldError errors={[fieldState.error]} />
+                    </Field>
+                  )}
+                />
 
-        {/* Footer */}
-        <CardFooter className="flex flex-col gap-3">
-          <p className="text-sm text-muted-foreground">
-            Already have an account?{" "}
-            <Link className="hover:underline" to="/login">
-              Login
-            </Link>
-          </p>
-        </CardFooter>
+                {/* Username */}
+                <Controller
+                  name="username"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <Input {...field} placeholder="Username" />
+                      <FieldError errors={[fieldState.error]} />
+                    </Field>
+                  )}
+                />
+
+                {/* Email */}
+                <Controller
+                  name="email"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <Input
+                        {...field}
+                        value={field.value || ""}
+                        placeholder="Email (optional)"
+                      />
+                      <FieldError errors={[fieldState.error]} />
+                    </Field>
+                  )}
+                />
+
+                {/* Phone */}
+                <Controller
+                  name="phoneNumber"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <Input
+                        {...field}
+                        value={field.value || ""}
+                        placeholder="Phone (optional)"
+                      />
+                      <FieldError errors={[fieldState.error]} />
+                    </Field>
+                  )}
+                />
+
+                {/* Password */}
+                <Controller
+                  name="password"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field
+                      data-invalid={fieldState.invalid}
+                      className="md:col-span-2"
+                    >
+                      <Input
+                        {...field}
+                        type="password"
+                        placeholder="Password"
+                      />
+                      <FieldError errors={[fieldState.error]} />
+                    </Field>
+                  )}
+                />
+
+                {/* DOB */}
+                <Controller
+                  name="dateOfBirth"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <Input
+                        type="date"
+                        value={field.value || ""}
+                        onChange={field.onChange}
+                      />
+                      <FieldError errors={[fieldState.error]} />
+                    </Field>
+                  )}
+                />
+
+                {/* Gender */}
+                <Controller
+                  name="gender"
+                  control={form.control}
+                  render={({ field }) => (
+                    <select
+                      {...field}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                      value={field.value ?? ""}
+                      className="h-11 rounded-lg border px-2"
+                    >
+                      <option value={0}>Male</option>
+                      <option value={1}>Female</option>
+                      <option value={2}>Other</option>
+                    </select>
+                  )}
+                />
+              </FieldGroup>
+
+              {/* Submit Button */}
+              <div className="md:col-span-2 mt-2">
+                <Button
+                  type="submit"
+                  className="w-full h-11 rounded-lg text-sm sm:text-base"
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <div className="flex items-center justify-center gap-2">
+                      <Spinner />
+                      <span>Registering...</span>
+                    </div>
+                  ) : (
+                    "Register"
+                  )}
+                </Button>
+              </div>
+            </form>
+          </CardContent>
+
+          {/* Footer */}
+          <CardFooter className="flex flex-col gap-2 sm:gap-3 mt-4 sm:mt-6 p-0 text-center md:text-left">
+            <p className="text-xs sm:text-sm text-muted-foreground">
+              Already have an account?{" "}
+              <Link className="hover:underline" to="/login">
+                Login
+              </Link>
+            </p>
+          </CardFooter>
+        </div>
       </Card>
     </div>
   );
