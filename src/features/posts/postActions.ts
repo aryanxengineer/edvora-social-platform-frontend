@@ -3,9 +3,14 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 
 export const createPost = createAsyncThunk(
   "posts/create",
-  async (postData: any, { rejectWithValue }) => {
+  async (postData: FormData, { rejectWithValue }) => {
     try {
-      const { data } = await axiosInstance.post("/posts/", postData);
+      const { data } = await axiosInstance.post("/posts/", postData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
       return data;
     } catch (error: any) {
       return rejectWithValue(
@@ -19,7 +24,7 @@ export const getSinglePost = createAsyncThunk(
   "posts/single",
   async (postId: string, { rejectWithValue }) => {
     try {
-      const { data } = await axiosInstance.get(`/posts/${postId}`);
+      const { data } = await axiosInstance.get(`/posts/post/${postId}`);
       return data;
     } catch (error: any) {
       return rejectWithValue(
@@ -29,11 +34,11 @@ export const getSinglePost = createAsyncThunk(
   },
 );
 
-export const getFeeds = createAsyncThunk(
-  "posts/feeds",
-  async (postId: string, { rejectWithValue }) => {
+export const getProfilePosts = createAsyncThunk(
+  "posts/profilePosts",
+  async (profileId: string, { rejectWithValue }) => {
     try {
-      const { data } = await axiosInstance.get(`/posts/${postId}`);
+      const { data } = await axiosInstance.get(`/posts/${profileId}`);
       return data;
     } catch (error: any) {
       return rejectWithValue(

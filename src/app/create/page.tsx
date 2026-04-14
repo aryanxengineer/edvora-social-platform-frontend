@@ -1,166 +1,201 @@
-"use client";
-
-import { useForm, Controller } from "react-hook-form";
 import { useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Spinner } from "@/components/ui/spinner";
+import { toast } from "sonner";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { createPost } from "@/features/posts/postActions";
+import { useNavigate } from "react-router-dom";
+import { ArrowLeft, ImagePlus } from "lucide-react";
 
-function parseCommaSeparated(value: string) {
-  return value
-    .split(",")
-    .map((v) => v.trim())
-    .filter(Boolean);
-}
+export default function Page() {
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
-export default function CreatePostPage() {
-  const {
-    register,
-    handleSubmit,
-    control,
-    formState: { errors },
-  } = useForm();
+  const { isLoading } = useAppSelector((state) => state.post);
 
+  const [form, setForm] = useState({
+    title: "",
+    caption: "",
+    visibility: "public",
+    hashtags: "",
+    mentions: "",
+  });
+
+  const [image, setImage] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
 
-  const onSubmit = async (data: any) => {
+  const handleChange = (e: any) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleImageChange = (e: any) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setImage(file);
+    setPreview(URL.createObjectURL(file));
+  };
+
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+
+    if (!image) {
+      toast.error("Image is required");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("image", image);
+    formData.append("title", form.title);
+    formData.append("caption", form.caption);
+    formData.append("visibility", form.visibility);
+
+    form.hashtags.split(",").forEach((tag) => {
+      if (tag.trim()) formData.append("hashtags", tag.trim());
+    });
+
+    form.mentions.split(",").forEach((mention) => {
+      if (mention.trim()) formData.append("mentions", mention.trim());
+    });
+
     try {
-      setIsLoading(true);
-
-      const formData = new FormData();
-      formData.append("image", data.image[0]);
-      formData.append("caption", data.caption || "");
-      formData.append("title", data.title || "");
-      formData.append("location", data.location || "");
-      formData.append("visibility", data.visibility);
-      formData.append("tags", JSON.stringify(data.tags || []));
-      formData.append("mentions", JSON.stringify(data.mentions || []));
-
-      await new Promise((res) => setTimeout(res, 1500));
-
-      console.log("Submitted:", data);
-    } finally {
-      setIsLoading(false);
+      await dispatch(createPost(formData)).unwrap();
+      toast.success("Post created successfully");
+      navigate("/");
+    } catch (err: any) {
+      toast.error(err.message);
     }
   };
 
-  const handleImageChange = (file: File) => {
-    const url = URL.createObjectURL(file);
-    setPreview(url);
-  };
-
   return (
-    <div className="min-h-screen bg-white">
-
-      {/* 🔹 Sticky Header (like Instagram) */}
-      <div className="sticky top-0 z-10 bg-white border-b px-4 py-3 flex justify-between items-center">
-        <span className="font-semibold text-lg">Create Post</span>
-        <button
-          onClick={handleSubmit(onSubmit)}
-          disabled={isLoading}
-          className="text-blue-600 font-medium disabled:opacity-50"
-        >
-          {isLoading ? "Posting..." : "Share"}
-        </button>
-      </div>
-
-      {/* 🔹 Main Scrollable Content */}
+    <div className="w-full h-full overflow-y-auto no-scrollbar">
       <div className="max-w-2xl mx-auto px-4 py-6 space-y-6">
 
-        {/* Image Upload */}
-        <div className="space-y-3">
-          <input
-            type="file"
-            accept="image/*"
-            {...register("image", {
-              required: true,
-              onChange: (e) =>
-                handleImageChange(e.target.files[0]),
-            })}
-          />
-
-          {errors.image && (
-            <p className="text-red-500 text-sm">
-              Image is required
-            </p>
-          )}
+        {/* HEADER */}
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => navigate(-1)}
+            className="w-9 h-9 flex items-center justify-center border rounded-full hover:bg-muted transition"
+          >
+            <ArrowLeft size={16} />
+          </button>
+          <h1 className="text-lg font-semibold">Create Post</h1>
         </div>
 
-        {/* Image Preview */}
-        {preview && (
-          <div className="w-full aspect-square bg-black overflow-hidden rounded-md">
-            <img
-              src={preview}
-              alt="preview"
-              className="w-full h-full object-contain"
-            />
-          </div>
-        )}
+        {/* FORM CARD */}
+        <Card>
+          <CardHeader className="text-sm font-medium">
+            Upload your content
+          </CardHeader>
 
-        {/* Caption */}
-        <textarea
-          placeholder="Write a caption..."
-          className="w-full border rounded-md p-3 resize-none"
-          rows={4}
-          {...register("caption")}
-        />
+          <CardContent className="space-y-5">
 
-        {/* Title */}
-        <input
-          placeholder="Title"
-          className="w-full border rounded-md p-2"
-          {...register("title")}
-        />
+            <form onSubmit={handleSubmit} className="space-y-5">
 
-        {/* Location */}
-        <input
-          placeholder="Add location"
-          className="w-full border rounded-md p-2"
-          {...register("location")}
-        />
+              {/* IMAGE UPLOAD */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Image</label>
 
-        {/* Tags */}
-        <Controller
-          control={control}
-          name="tags"
-          render={({ field }) => (
-            <input
-              placeholder="Tags (comma separated)"
-              className="w-full border rounded-md p-2"
-              onChange={(e) =>
-                field.onChange(
-                  parseCommaSeparated(e.target.value)
-                )
-              }
-            />
-          )}
-        />
+                <div className="border rounded-lg p-4 flex flex-col items-center justify-center gap-3 cursor-pointer hover:bg-muted/50 transition relative">
+                  <Input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    className="absolute inset-0 opacity-0 cursor-pointer"
+                  />
 
-        {/* Mentions */}
-        <Controller
-          control={control}
-          name="mentions"
-          render={({ field }) => (
-            <input
-              placeholder="Mentions (comma separated)"
-              className="w-full border rounded-md p-2"
-              onChange={(e) =>
-                field.onChange(
-                  parseCommaSeparated(e.target.value)
-                )
-              }
-            />
-          )}
-        />
+                  {preview ? (
+                    <img
+                      src={preview}
+                      alt="preview"
+                      className="w-full h-60 object-cover rounded-md"
+                    />
+                  ) : (
+                    <>
+                      <ImagePlus className="w-6 h-6 text-muted-foreground" />
+                      <p className="text-xs text-muted-foreground">
+                        Click to upload image
+                      </p>
+                    </>
+                  )}
+                </div>
+              </div>
 
-        {/* Visibility */}
-        <select
-          className="w-full border rounded-md p-2"
-          {...register("visibility")}
-        >
-          <option value="public">Public</option>
-          <option value="private">Private</option>
-          <option value="followers">Followers</option>
-        </select>
+              {/* TITLE */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Title</label>
+                <Input
+                  name="title"
+                  placeholder="Give your post a title"
+                  value={form.title}
+                  onChange={handleChange}
+                />
+              </div>
 
+              {/* CAPTION */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Caption</label>
+                <Textarea
+                  name="caption"
+                  placeholder="Write something..."
+                  value={form.caption}
+                  onChange={handleChange}
+                />
+              </div>
+
+              {/* HASHTAGS + MENTIONS GRID */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Hashtags</label>
+                  <Input
+                    name="hashtags"
+                    placeholder="#react, #node"
+                    value={form.hashtags}
+                    onChange={handleChange}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Mentions</label>
+                  <Input
+                    name="mentions"
+                    placeholder="@user1, @user2"
+                    value={form.mentions}
+                    onChange={handleChange}
+                  />
+                </div>
+              </div>
+
+              {/* VISIBILITY */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Visibility</label>
+                <select
+                  name="visibility"
+                  value={form.visibility}
+                  onChange={handleChange}
+                  className="w-full border rounded-md p-2 bg-background"
+                >
+                  <option value="public">Public</option>
+                  <option value="private">Private</option>
+                </select>
+              </div>
+
+              {/* SUBMIT */}
+              <Button
+                disabled={isLoading}
+                type="submit"
+                className="w-full"
+              >
+                {isLoading ? <Spinner /> : "Post"}
+              </Button>
+
+            </form>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

@@ -3,6 +3,8 @@ import Register from "@/app/auth/register/page";
 import Home from "@/app/home/page";
 import Create from "@/app/create/page";
 import Profile from "@/app/profile/page";
+import Post from "@/app/post/page";
+import Posts from "@/app/posts/page";
 
 export const publicRoutes = [
   {
@@ -37,5 +39,15 @@ export const protectedRoutes = [
     title: "Profile",
     path: "/profile/:profileId",
     element: <Profile />,
+  },
+  {
+    title: "Post",
+    path: "/post/:postId",
+    element: <Post />,
+  },
+  {
+    title: "Posts",
+    path: "/posts",
+    element: <Posts />,
   },
 ];

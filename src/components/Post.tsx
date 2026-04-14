@@ -26,7 +26,7 @@ export default function PostCard({ post }: { post: PostType }) {
   const newAvatar = authorAvatar ?? authorUsernameSnapshot[0].toUpperCase();
 
   const dispatch = useAppDispatch();
-  const {} = useAppSelector((state) => state.like);
+  const { likesData } = useAppSelector((state) => state.like);
 
   const [commentData, setCommentData] = useState("");
 
@@ -96,7 +96,7 @@ export default function PostCard({ post }: { post: PostType }) {
 
           {/* Likes */}
           <div className="px-4">
-            <p className="text-sm font-semibold">1,234 likes</p>
+            <p className="text-sm font-semibold">{likesData?.length} likes</p>
           </div>
 
           {/* Caption */}
@@ -118,7 +118,7 @@ export default function PostCard({ post }: { post: PostType }) {
               className="flex-1 text-sm outline-none bg-transparent"
             />
             <Button onClick={() => commentHandler()} className="px-5">
-              Post
+              Comment
             </Button>
           </div>
         </CardContent>

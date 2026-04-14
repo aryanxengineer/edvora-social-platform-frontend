@@ -17,7 +17,7 @@ createRoot(document.getElementById("root")!).render(
         <Provider store={reduxStore}>
           <App />
         </Provider>
-        <Toaster position="top-center" richColors />
+        <Toaster position="bottom-right" richColors />
       </TooltipProvider>
     </ThemeProvider>
   </BrowserRouter>,

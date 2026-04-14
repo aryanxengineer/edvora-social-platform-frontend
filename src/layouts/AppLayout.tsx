@@ -17,7 +17,7 @@ const AppLayout = () => {
             <Card className="md:hidden fixed top-0 left-0 w-full border-b z-50">
               <div className="flex items-center justify-between px-4 h-3">
                 <h1 className="text-lg font-semibold tracking-tight">
-                  Instagram
+                  Edvora
                 </h1>
 
                 <div className="flex items-center gap-4">
@@ -31,13 +31,15 @@ const AppLayout = () => {
               </div>
             </Card>
             <main className="w-full h-screen lg:grid lg:grid-cols-[65%_35%]">
-              <Outlet />
+             
+                <Outlet />
               <section className="hidden lg:block py-4">
                 <Card className="py-3">
                   <CardHeader>Comments</CardHeader>
                   <CardContent className="h-64 border-t-2">
-
-                    <section className="hidden overflow-x-hidden no-scrollbar scroll-auto">hello</section>
+                    <section className="hidden overflow-x-hidden no-scrollbar scroll-auto">
+                      hello
+                    </section>
 
                     <div className="w-full h-full flex justify-center items-center">
                       <p className="text-xs font-semibold text-center py-5 px-2">
