@@ -1,17 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { like, disLike, likes } from "./likeActions";
-import type { LikeType } from "@/@types/like.type";
 
 interface LikeState {
   isLoading: boolean;
   message: string;
-  likesData: [LikeType] | null;
+  likedByUsers: string[] | null;
 }
 
 const initialState: LikeState = {
   isLoading: false,
   message: "",
-  likesData: null,
+  likedByUsers: null,
 };
 
 const likeSlice = createSlice({
@@ -24,9 +23,15 @@ const likeSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(likes.fulfilled, (state: LikeState, action) => {
+        // console.log(action.payload, " likes aa gaye hain")
+        const userIds =
+          action.payload.data.length > 0
+            ? action.payload.data.map((obj: any) => String(obj.userId))
+            : [];
+
         state.isLoading = false;
         state.message = action.payload?.message;
-        state.likesData = action.payload.data;
+        state.likedByUsers = userIds;
       })
       .addCase(likes.rejected, (state: LikeState, action) => {
         state.isLoading = false;

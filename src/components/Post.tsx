@@ -1,37 +1,51 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { MessageCircle, Send, Bookmark, MoreHorizontal } from "lucide-react";
-import Like from "@/components/Like";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { useEffect, useState } from "react";
+import {
+  MessageCircle,
+  Send,
+  Bookmark,
+  MoreHorizontal,
+  Heart,
+} from "lucide-react";
+import { useAppDispatch } from "@/store/hooks";
+import { useState } from "react";
 import { comment } from "@/features/comments/commentActions";
 import { toast } from "sonner";
-import type { PostType } from "@/@types/post";
-import { likes } from "@/features/likes/likeActions";
+import { disLike, like } from "@/features/likes/likeActions";
 
-export default function PostCard({ post }: { post: PostType }) {
+export default function PostCard({ post }: { post: any }) {
   const {
-    _id,
-    profileId,
-    image,
-    authorUsernameSnapshot,
-    authorAvatar,
-    caption,
-    title,
-    visibility,
-    createdAt,
+    _doc: {
+      _id,
+      profileId,
+      image,
+      authorUsernameSnapshot,
+      authorAvatar,
+      caption,
+      likesCount,
+      title,
+      visibility,
+      createdAt,
+    },
+    isLiked,
+    commentsCount,
   } = post;
 
-  const newAvatar = authorAvatar ?? authorUsernameSnapshot[0].toUpperCase();
+  const newAvatar = authorAvatar
+    ? authorAvatar
+    : authorUsernameSnapshot
+      ? authorUsernameSnapshot.charAt(0).toUpperCase()
+      : "U";
 
   const dispatch = useAppDispatch();
-  const { likesData } = useAppSelector((state) => state.like);
 
   const [commentData, setCommentData] = useState("");
+  const [likes, setLikes] = useState(likesCount);
+  const [liked, setLiked] = useState(isLiked);
 
   const commentHandler = () => {
-    const postId = "69d75d59c3388d849ae6a36c";
+    const postId = _id;
     const content = commentData;
 
     try {
@@ -43,9 +57,16 @@ export default function PostCard({ post }: { post: PostType }) {
     }
   };
 
-  useEffect(() => {
-    dispatch(likes(_id));
-  }, []);
+  const likeHandler = () => {
+    if (liked) {
+      setLikes((prev: number) => prev - 1);
+      dispatch(disLike(_id));
+    } else {
+      setLikes((prev: number) => prev + 1);
+      dispatch(like(_id));
+    }
+    setLiked((prev: boolean) => !prev);
+  };
 
   return (
     <div className="flex justify-center w-full p-2 sm:p-4">
@@ -80,9 +101,22 @@ export default function PostCard({ post }: { post: PostType }) {
           {/* Actions */}
           <div className="flex items-center justify-between px-4 py-3">
             <div className="flex items-center gap-4">
-              <Like postId={_id} />
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={likeHandler}
+                className="hover:scale-110 transition"
+              >
+                <Heart
+                  className={`h-6 w-6 ${liked ? "fill-red-500 text-red-500" : ""}`}
+                />
+              </Button>
               <Button variant="ghost" size="icon">
                 <MessageCircle className="h-6 w-6" />
+                <span className="pl-2 text-xs font-light">
+                  {" "}
+                  {commentsCount}
+                </span>
               </Button>
               <Button variant="ghost" size="icon">
                 <Send className="h-6 w-6" />
@@ -96,7 +130,7 @@ export default function PostCard({ post }: { post: PostType }) {
 
           {/* Likes */}
           <div className="px-4">
-            <p className="text-sm font-semibold">{likesData?.length} likes</p>
+            <p className="text-sm font-semibold">{likes} likes</p>
           </div>
 
           {/* Caption */}

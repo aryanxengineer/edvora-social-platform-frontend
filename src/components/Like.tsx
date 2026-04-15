@@ -1,18 +1,13 @@
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { like, disLike } from "@/features/likes/likeActions";
+import { disLike, like } from "@/features/likes/likeActions";
+import { useAppDispatch } from "@/store/hooks";
 import { Button } from "./ui/button";
 import { Heart } from "lucide-react";
-import { useState } from "react";
 
-const Like = ({ postId }: { postId: string }) => {
+const Like = ({ isLiked, postId }: { isLiked: boolean; postId: string }) => {
   const dispatch = useAppDispatch();
-  const {} = useAppSelector((state) => state.like);
-
-  const [liked, setLiked] = useState(false);
 
   const likeHandler = () => {
-    setLiked(!liked);
-    if (liked) {
+    if (isLiked) {
       dispatch(disLike(postId));
     } else {
       dispatch(like(postId));
@@ -23,11 +18,11 @@ const Like = ({ postId }: { postId: string }) => {
     <Button
       variant="ghost"
       size="icon"
-      onClick={() => likeHandler()}
+      onClick={likeHandler}
       className="hover:scale-110 transition"
     >
       <Heart
-        className={`h-6 w-6 ${liked ? "fill-red-500 text-red-500" : ""}`}
+        className={`h-6 w-6 ${isLiked ? "fill-red-500 text-red-500" : ""}`}
       />
     </Button>
   );

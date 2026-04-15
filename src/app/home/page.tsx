@@ -24,7 +24,7 @@ const Home = () => {
       <section>
         {trendingPostsData && trendingPostsData?.length > 0 ? (
           trendingPostsData.map((post, index) => (
-            <PostCard post={post} key={index + post.image.url.substring(0, 7)} />
+            <PostCard post={post} key={index} />
           ))
         ) : (
           <p>no posts found</p>

@@ -7,6 +7,9 @@ export type PostType = {
     url: string;
     publicId: string;
   };
+  likesCount: number;
+  isLiked: boolean;
+  commentCount: number;
   caption?: string;
   title?: string;
   hashtags: string[];

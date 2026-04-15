@@ -1,12 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { trendingPosts } from "./feedActions.js";
-import type { PostType } from "@/@types/post.js";
 
 export interface TrendingFeedState {
   isLoading: boolean;
   success: boolean;
   message: string;
-  trendingPostsData: [PostType] | null;
+  trendingPostsData: any[] | null;
 }
 
 const initialState: TrendingFeedState = {

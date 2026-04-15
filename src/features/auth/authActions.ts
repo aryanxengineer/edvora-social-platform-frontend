@@ -55,7 +55,6 @@ export const authenticUser = createAsyncThunk<
     const { data } = await axiosInstance.get("/auth/me", {
       withCredentials: true,
     });
-    console.log(data);
     return data;
   } catch (error: any) {
     return rejectWithValue(

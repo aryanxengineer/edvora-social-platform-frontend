@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { createPost, getProfilePosts, getSinglePost } from "./postActions.js";
-import type { PostType } from "@/@types/post.js";
+import type { PostType } from "@/@types/singlePostResponseType.js";
 
 export interface PostState {
   isLoading: boolean;
