@@ -5,23 +5,33 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 
-import { myProfile } from "@/features/profiles/profileActions";
+import { getProfileById, myProfile } from "@/features/profiles/profileActions";
 import { getProfilePosts } from "@/features/posts/postActions";
 
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 const Page = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const { profileId } = useParams();
+  const location = useLocation();
 
   const { isLoading, profileData } = useAppSelector((state) => state.profile);
   const { posts } = useAppSelector((state) => state.post);
 
   useEffect(() => {
     const fetchData = async () => {
+      let res;
       try {
-        const res = await dispatch(myProfile()).unwrap();
+        if (profileId) {
+          res = await dispatch(getProfileById(profileId)).unwrap();
+        } 
+
+        if(location.pathname === "/profile") {
+          res = await dispatch(myProfile()).unwrap();
+        }
+        
         if (res.data) {
           dispatch(getProfilePosts(res.data._id));
         }
@@ -58,12 +68,10 @@ const Page = () => {
   return (
     <div className="w-full h-full overflow-y-auto">
       <div className="max-w-5xl mx-auto px-4 py-6 space-y-6">
-
         {/* ================= HEADER ================= */}
         <Card>
           <CardContent className="p-6">
             <div className="grid grid-cols-12 gap-6">
-              
               {/* AVATAR */}
               <div className="col-span-12 md:col-span-3 flex justify-center md:justify-start">
                 <Avatar className="w-24 h-24 md:w-28 md:h-28">
@@ -76,10 +84,8 @@ const Page = () => {
 
               {/* INFO */}
               <div className="col-span-12 md:col-span-9 space-y-4 text-center md:text-left">
-                
                 {/* NAME + ACTIONS */}
                 <div className="flex flex-col md:flex-row items-center md:items-center md:justify-between gap-3">
-                  
                   {/* Username */}
                   <h2 className="text-xl md:text-2xl font-semibold text-center md:text-left w-full md:w-auto">
                     {profileData.username}
@@ -108,14 +114,11 @@ const Page = () => {
 
                 {/* BIO */}
                 <div className="space-y-1 text-sm">
-                  <p className="font-medium">
-                    {profileData.fullname || "—"}
-                  </p>
+                  <p className="font-medium">{profileData.fullname || "—"}</p>
                   <p className="text-muted-foreground">
                     {profileData.bio || "No bio available"}
                   </p>
                 </div>
-
               </div>
             </div>
           </CardContent>
@@ -151,7 +154,6 @@ const Page = () => {
             )}
           </div>
         </section>
-
       </div>
     </div>
   );

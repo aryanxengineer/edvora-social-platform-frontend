@@ -17,31 +17,25 @@ import { disLike, like } from "@/features/likes/likeActions";
 import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
 import { Spinner } from "./ui/spinner";
 import { useNavigate } from "react-router-dom";
-
-export default function PostCard({ post }: { post: any }) {
+export default function SinglePost({ post }: { post: any }) {
   const {
-    _doc: {
-      _id,
-      profileId,
-      image,
-      authorUsernameSnapshot,
-      authorAvatar,
-      caption,
-      likesCount,
-      title,
-      createdAt,
-    },
+    _id,
+    profileId,
+    image,
+    authorUsernameSnapshot,
+    authorAvatar,
+    caption,
+    likesCount,
+    title,
+    createdAt,
     isLiked,
     commentsCount,
   } = post;
 
   const navigate = useNavigate();
 
-  const newAvatar = authorAvatar
-    ? authorAvatar
-    : authorUsernameSnapshot
-      ? authorUsernameSnapshot.charAt(0).toUpperCase()
-      : "U";
+  const avatarFallback =
+    authorUsernameSnapshot?.charAt(0)?.toUpperCase() || "U";
 
   const dispatch = useAppDispatch();
   const { commentsLoading, comments } = useAppSelector(
@@ -80,8 +74,8 @@ export default function PostCard({ post }: { post: any }) {
   };
 
   return (
-    <div className="flex justify-center w-full p-2 sm:p-4">
-      <Card className="w-full max-w-xl rounded-2xl shadow-md border">
+    <div className="flex justify-center w-full p-2 sm:p-6">
+      <Card className="w-full max-w-2xl rounded-2xl border shadow-md">
         <CardContent className="p-0">
           {/* HEADER */}
           <div className="flex items-center justify-between p-4">
@@ -90,8 +84,8 @@ export default function PostCard({ post }: { post: any }) {
                 className="h-10 w-10 cursor-pointer"
                 onClick={() => navigate(`/profile/${profileId}`)}
               >
-                <AvatarImage src={newAvatar} />
-                <AvatarFallback>{newAvatar}</AvatarFallback>
+                <AvatarImage src={authorAvatar || ""} />
+                <AvatarFallback>{avatarFallback}</AvatarFallback>
               </Avatar>
 
               <div>
@@ -102,8 +96,7 @@ export default function PostCard({ post }: { post: any }) {
                   {authorUsernameSnapshot}
                 </button>
 
-                <p className="text-[11px] text-gray-500 flex items-center gap-1">
-                  <Clock className="h-3 w-3" />
+                <p className="text-[11px] text-gray-500">
                   {new Date(createdAt).toLocaleString("en-IN", {
                     day: "2-digit",
                     month: "short",
@@ -119,11 +112,11 @@ export default function PostCard({ post }: { post: any }) {
           </div>
 
           {/* IMAGE */}
-          <div className="w-full aspect-square overflow-hidden bg-black">
+          <div className="w-full bg-black aspect-square overflow-hidden">
             <img
-              src={image.url}
-              className="w-full h-full object-contain"
+              src={image?.url}
               alt="post"
+              className="w-full h-full object-contain"
             />
           </div>
 
@@ -204,18 +197,21 @@ export default function PostCard({ post }: { post: any }) {
             <p className="text-sm font-semibold">{likes} likes</p>
           </div>
 
-          {/* CAPTION */}
-          <div className="px-4 py-2 text-sm">
+          {/* TITLE */}
+          <div className="px-4 text-sm font-medium text-gray-900">{title}</div>
+
+          {/* CAPTION (NEWLINES FIXED) */}
+          <div className="px-4 py-2 text-sm text-gray-700 whitespace-pre-line">
             <span
               onClick={() => navigate(`/profile/${profileId}`)}
               className="font-semibold mr-2 cursor-pointer hover:underline"
             >
               {authorUsernameSnapshot}
             </span>
-            {caption ?? title ?? "No caption"}
+            {caption}
           </div>
 
-          {/* ADD COMMENT */}
+          {/* COMMENT INPUT */}
           <div className="flex items-center border-t px-4 py-2">
             <input
               type="text"

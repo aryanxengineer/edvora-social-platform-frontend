@@ -1,4 +1,4 @@
-import PostCard from "@/components/Post";
+import SinglePost from "@/components/ShowSinglePost";
 import { Spinner } from "@/components/ui/spinner";
 import { getSinglePost } from "@/features/posts/postActions";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
@@ -15,6 +15,8 @@ const Page = () => {
   );
 
   const { postId } = useParams();
+
+  console.log(singlePost)
 
   useEffect(() => {
     if (postId) {
@@ -43,7 +45,7 @@ const Page = () => {
         </div>
       ) : singlePost ? (
         <div className="max-w-2xl">
-          <PostCard post={singlePost} />
+          <SinglePost post={singlePost} />
         </div>
       ) : (
         <div className="text-center text-gray-500 py-10">

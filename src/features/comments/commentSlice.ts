@@ -1,14 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { comment, deleteComment } from "./commentActions";
+import { comment, deleteComment, postComments } from "./commentActions";
 
 interface CommentState {
   isLoading: boolean;
   message: string;
+  commentsLoading: boolean;
+  comments: any[] | null;
 }
 
 const initialState: CommentState = {
   isLoading: false,
   message: "",
+  commentsLoading: false,
+  comments: null,
 };
 
 const commentSlice = createSlice({
@@ -39,6 +43,20 @@ const commentSlice = createSlice({
       .addCase(deleteComment.rejected, (state: CommentState, action) => {
         state.isLoading = false;
         state.message = action.payload as unknown as string;
+      })
+
+      .addCase(postComments.pending, (state: CommentState) => {
+        state.commentsLoading = true;
+      })
+      .addCase(postComments.fulfilled, (state: CommentState, action) => {
+        state.commentsLoading = false;
+        state.message = action.payload?.message;
+        state.comments = action.payload.data;
+      })
+      .addCase(postComments.rejected, (state: CommentState, action) => {
+        state.commentsLoading = false;
+        state.message = action.payload as unknown as string;
+        state.comments = null;
       });
   },
 });
