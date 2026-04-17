@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -10,6 +10,7 @@ import { getProfilePosts } from "@/features/posts/postActions";
 
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { follow, unFollow, isFollowed } from "@/features/follow/followActions";
 
 const Page = () => {
   const dispatch = useAppDispatch();
@@ -19,20 +20,56 @@ const Page = () => {
 
   const { isLoading, profileData } = useAppSelector((state) => state.profile);
   const { posts } = useAppSelector((state) => state.post);
+  const { isFollowing } = useAppSelector((state) => state.follow);
 
+  // ✅ Optimistic followers count
+  const [followersCount, setFollowersCount] = useState<number>(0);
+
+  // ✅ Sync followers count with backend
+  useEffect(() => {
+    if (profileData?.followersCount !== undefined) {
+      setFollowersCount(profileData.followersCount);
+    }
+  }, [profileData]);
+
+  const followHandler = async (id: string) => {
+    try {
+      if (isFollowing) {
+        // optimistic update
+        setFollowersCount((prev) => prev - 1);
+        await dispatch(unFollow(id)).unwrap();
+      } else {
+        // optimistic update
+        setFollowersCount((prev) => prev + 1);
+        await dispatch(follow(id)).unwrap();
+      }
+    } catch (err) {
+      console.error("Follow action failed");
+
+      // rollback
+      if (isFollowing) {
+        setFollowersCount((prev) => prev + 1);
+      } else {
+        setFollowersCount((prev) => prev - 1);
+      }
+    }
+  };
+
+  // ✅ Fetch profile + posts + follow status
   useEffect(() => {
     const fetchData = async () => {
       let res;
       try {
         if (profileId) {
           res = await dispatch(getProfileById(profileId)).unwrap();
-        } 
+        }
 
-        if(location.pathname === "/profile") {
+        if (location.pathname === "/profile") {
           res = await dispatch(myProfile()).unwrap();
         }
-        
-        if (res.data) {
+
+        if (res?.data?._id) {
+          dispatch(isFollowed(res.data._id));
           dispatch(getProfilePosts(res.data._id));
         }
       } catch (err) {
@@ -41,7 +78,7 @@ const Page = () => {
     };
 
     fetchData();
-  }, [dispatch]);
+  }, [profileId, location.pathname, dispatch]);
 
   if (isLoading) {
     return (
@@ -61,7 +98,7 @@ const Page = () => {
 
   const stats = [
     { label: "Posts", value: profileData.postCounts || 0 },
-    { label: "Followers", value: profileData.followersCount || 0 },
+    { label: "Followers", value: followersCount }, // ✅ optimistic value
     { label: "Following", value: profileData.followingCount || 0 },
   ];
 
@@ -85,15 +122,24 @@ const Page = () => {
               {/* INFO */}
               <div className="col-span-12 md:col-span-9 space-y-4 text-center md:text-left">
                 {/* NAME + ACTIONS */}
-                <div className="flex flex-col md:flex-row items-center md:items-center md:justify-between gap-3">
-                  {/* Username */}
-                  <h2 className="text-xl md:text-2xl font-semibold text-center md:text-left w-full md:w-auto">
+                <div className="flex flex-col md:flex-row items-center md:justify-between gap-3">
+                  <h2 className="text-xl md:text-2xl font-semibold w-full md:w-auto">
                     {profileData.username}
                   </h2>
 
-                  {/* Buttons */}
                   <div className="flex justify-center md:justify-start gap-2 w-full md:w-auto">
-                    <Button size="sm">Edit Profile</Button>
+                    {location.pathname === "/profile" ? (
+                      <Button size="sm">Edit Profile</Button>
+                    ) : (
+                      <Button
+                        size="sm"
+                        variant={isFollowing ? "secondary" : "default"}
+                        onClick={() => followHandler(profileData._id)}
+                      >
+                        {isFollowing ? "Unfollow" : "Follow"}
+                      </Button>
+                    )}
+
                     <Button size="sm" variant="outline">
                       Share
                     </Button>

@@ -6,6 +6,7 @@ import profileReducer from "@/features/profiles/profileSlice";
 import likeReducer from "@/features/likes/likeSlice";
 import feedReducer from "@/features/feed/feedSlice";
 import commentReducer from "@/features/comments/commentSlice";
+import followReducer from "@/features/follow/followSlice";
 
 export const reduxStore = configureStore({
   reducer: {
@@ -15,6 +16,7 @@ export const reduxStore = configureStore({
     like: likeReducer,
     feed: feedReducer,
     comment: commentReducer,
+    follow: followReducer,
   },
 });
 

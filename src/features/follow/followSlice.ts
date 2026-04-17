@@ -1,14 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { follow, unFollow } from "./followActions";
+import { follow, unFollow, isFollowed } from "./followActions";
 
 interface FollowState {
   isLoading: boolean;
   message: string;
+  isFollowing: boolean;
 }
 
 const initialState: FollowState = {
   isLoading: false,
   message: "",
+  isFollowing: false,
 };
 
 const followSlice = createSlice({
@@ -22,6 +24,7 @@ const followSlice = createSlice({
       })
       .addCase(follow.fulfilled, (state: FollowState, action) => {
         state.isLoading = false;
+        state.isFollowing = true;
         state.message = action.payload?.data?.message;
       })
       .addCase(follow.rejected, (state: FollowState, action) => {
@@ -34,12 +37,27 @@ const followSlice = createSlice({
       })
       .addCase(unFollow.fulfilled, (state: FollowState, action) => {
         state.isLoading = false;
+         state.isFollowing = false;
         state.message = action.payload?.data?.message;
       })
       .addCase(unFollow.rejected, (state: FollowState, action) => {
         state.isLoading = false;
         state.message = action.payload as unknown as string;
-      });
+      })
+
+      .addCase(isFollowed.pending, (state: FollowState) => {
+        state.isLoading = true;
+      })
+      .addCase(isFollowed.fulfilled, (state: FollowState, action) => {
+        state.isLoading = false;
+        state.message = action.payload?.message;
+        console.log(action.payload.data.isFollowed)
+        state.isFollowing = action.payload.data.isFollowed;
+      })
+      .addCase(isFollowed.rejected, (state: FollowState, action) => {
+        state.isLoading = false;
+        state.message = action.payload as unknown as string;
+      })
   },
 });
 

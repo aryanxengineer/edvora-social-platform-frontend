@@ -1,17 +1,31 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "@/helpers/axiosInstance";
 
-export const follow = createAsyncThunk(
+export const isFollowed = createAsyncThunk(
   "follow/user",
-  async (userId: string, { rejectWithValue }) => {
+  async (profileId: string, { rejectWithValue }) => {
+    try {
+      const { data } = await axiosInstance.get(`/follow/${profileId}`);
+      return data;
+    } catch (error: any) {
+      return rejectWithValue(
+        error?.response?.data?.message || "Something went wrong",
+      );
+    }
+  },
+);
+
+export const follow = createAsyncThunk(
+  "follow/isFollowed",
+  async (profileId: string, { rejectWithValue }) => {
     try {
       const { data } = await axiosInstance.post(`/follow/`, {
-        targetUserId: userId,
+        targetProfileId: profileId,
       });
       return data;
     } catch (error: any) {
       return rejectWithValue(
-        error?.response?.data?.message || "Rejected follow a user",
+        error?.response?.data?.message || "Something went wrong",
       );
     }
   },
@@ -19,9 +33,9 @@ export const follow = createAsyncThunk(
 
 export const unFollow = createAsyncThunk(
   "unFollow/user",
-  async (userId: string, { rejectWithValue }) => {
+  async (profileId: string, { rejectWithValue }) => {
     try {
-      const { data } = await axiosInstance.delete(`/follow/${userId}`);
+      const { data } = await axiosInstance.delete(`/follow/${profileId}`);
       return data;
     } catch (error: any) {
       return rejectWithValue(
