@@ -144,53 +144,77 @@ export default function PostCard({ post }: { post: any }) {
               </Button>
 
               <Dialog>
-                <DialogTrigger>
-                  <Button onClick={getCommentsHandler} variant="ghost">
-                    <MessageCircle className="h-6 w-6" />
+                <DialogTrigger asChild>
+                  <Button
+                    onClick={getCommentsHandler}
+                    variant="ghost"
+                    className="relative"
+                  >
+                    <MessageCircle className="h-5 w-5" />
+
                     {countComments > 0 && (
-                      <span className="pl-2 text-xs">{countComments}</span>
+                      <span className="ml-1 text-xs font-medium">
+                        {countComments}
+                      </span>
                     )}
                   </Button>
                 </DialogTrigger>
 
-                <DialogContent className="sm:max-w-sm">
-                  {commentsLoading ? (
-                    <Spinner />
-                  ) : Array.isArray(comments) && comments.length > 0 ? (
-                    <div className="flex max-h-80 flex-col gap-3 overflow-y-auto pr-1">
-                      {comments.map((comment: any, index: number) => (
+                <DialogContent className="sm:max-w-md p-0 overflow-hidden">
+                  {/* Header */}
+                  <div className="border-b px-4 py-3">
+                    <h2 className="text-sm font-semibold">Comments</h2>
+                  </div>
+
+                  {/* Body */}
+                  <div className="max-h-96 overflow-y-auto px-4 py-3 space-y-3">
+                    {commentsLoading ? (
+                      <div className="flex justify-center py-6">
+                        <Spinner />
+                      </div>
+                    ) : Array.isArray(comments) && comments.length > 0 ? (
+                      comments.map((comment: any, index: number) => (
                         <div
                           key={comment.profileId + index}
-                          className="rounded-md border bg-white p-2"
+                          className="rounded-lg border bg-muted/40 p-3 transition hover:bg-muted"
                         >
+                          {/* Top Row */}
                           <div className="flex items-center justify-between">
                             <button
                               onClick={() =>
                                 navigate(`/profile/${comment.profileId}`)
                               }
-                              className="text-xs font-medium text-blue-600 hover:underline"
+                              className="text-xs font-semibold text-primary hover:underline"
                             >
                               @{comment.username}
                             </button>
 
-                            <span className="text-[10px] text-gray-400">
+                            <span className="text-[10px] text-muted-foreground">
                               {new Date(comment.createdAt).toLocaleDateString(
                                 "en-IN",
                               )}
                             </span>
                           </div>
 
-                          <p className="mt-1 text-xs text-gray-700">
+                          {/* Content */}
+                          <p className="mt-2 text-sm text-foreground leading-relaxed">
                             {comment.content}
                           </p>
                         </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="text-center text-xs text-gray-400">
-                      No comments available.
-                    </p>
-                  )}
+                      ))
+                    ) : (
+                      <div className="flex items-center justify-center py-6">
+                        <p className="text-xs text-muted-foreground">
+                          No comments yet.
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Footer (future ready: add comment input here) */}
+                  <div className="border-t px-4 py-2 text-xs text-muted-foreground">
+                    {/* optional: "Be the first to comment" */}
+                  </div>
                 </DialogContent>
               </Dialog>
 
