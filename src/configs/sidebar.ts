@@ -1,8 +1,6 @@
 import {
   Home,
   Search,
-  Compass,
-  Film,
   PlusSquare,
   User,
 } from "lucide-react"
@@ -10,7 +8,6 @@ import {
 export const sidebarItems = [
   { title: "Home", icon: Home, url: "/" },
   { title: "Search", icon: Search, url: "/search" },
-  { title: "Trendings", icon: Compass, url: "/trendings" },
   { title: "Create", icon: PlusSquare, url: "/create" },
   { title: "Profile", icon: User, url: "/profile" },
 ]

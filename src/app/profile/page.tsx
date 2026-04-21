@@ -11,6 +11,7 @@ import { getProfilePosts } from "@/features/posts/postActions";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { follow, unFollow, isFollowed } from "@/features/follow/followActions";
+import { ArrowLeftIcon } from "lucide-react";
 
 const Page = () => {
   const dispatch = useAppDispatch();
@@ -107,7 +108,12 @@ const Page = () => {
     <div className="w-full h-full overflow-y-auto">
       <div className="max-w-5xl mx-auto px-4 py-6 space-y-6">
         {/* ================= HEADER ================= */}
-        <Card>
+        <Card className="relative">
+
+<Button className="absolute top-3 left-3" variant="outline" size="icon" onClick={() => navigate(-1)}>
+            <ArrowLeftIcon />
+          </Button>
+
           <CardContent className="p-6">
             <div className="grid grid-cols-12 gap-6">
               {/* AVATAR */}

@@ -6,6 +6,7 @@ import Profile from "@/app/profile/page";
 import Post from "@/app/post/page";
 import Posts from "@/app/posts/page";
 import Search from "@/app/search/page";
+import Settings from "@/app/setting/page";
 
 export const publicRoutes = [
   {
@@ -55,5 +56,10 @@ export const protectedRoutes = [
     title: "Search",
     path: "/search",
     element: <Search />,
+  },
+  {
+    title: "Settings",
+    path: "/settings",
+    element: <Settings />,
   },
 ];
