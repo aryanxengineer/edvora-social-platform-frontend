@@ -14,8 +14,6 @@ import { Link, useLocation } from "react-router-dom";
 export function AppSidebar() {
   const { pathname } = useLocation();
 
-  const isChat = pathname.endsWith("/chat");
-
   return (
     <Sidebar collapsible="icon" className="border-r">
       {/* LOGO */}

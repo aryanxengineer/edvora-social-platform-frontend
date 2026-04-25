@@ -1,4 +1,4 @@
-import { ArrowLeftIcon, MessageCircle, Plus } from "lucide-react";
+import { ArrowLeftIcon, MessageCircle } from "lucide-react";
 import { Card, CardHeader } from "./ui/card";
 import { Button } from "./ui/button";
 import { Link, useNavigate } from "react-router-dom";
